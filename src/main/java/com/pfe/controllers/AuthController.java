@@ -19,6 +19,13 @@ public class AuthController {
 
     @Autowired
     private JwtUtil jwtUtil;
+    @Autowired
+private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+
+@GetMapping("/encode/{password}")
+public String encodePassword(@PathVariable String password) {
+    return passwordEncoder.encode(password);
+}
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
