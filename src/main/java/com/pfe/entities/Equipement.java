@@ -32,7 +32,8 @@ public class Equipement {
     private Contrat contrat;
 
     private LocalDate dateInstallation;
-    private String localisation;
+    private String service;
+    private String parc;
 
     @Enumerated(EnumType.STRING)
     private StatutEquipement statut;
@@ -55,8 +56,10 @@ public class Equipement {
     public void setContrat(Contrat contrat) { this.contrat = contrat; }
     public LocalDate getDateInstallation() { return dateInstallation; }
     public void setDateInstallation(LocalDate dateInstallation) { this.dateInstallation = dateInstallation; }
-    public String getLocalisation() { return localisation; }
-    public void setLocalisation(String localisation) { this.localisation = localisation; }
+    public String getService() { return service; }
+    public void setService(String service) { this.service = service; }
+    public String getParc() { return parc; }
+    public void setParc(String parc) { this.parc = parc; }
     public StatutEquipement getStatut() { return statut; }
     public void setStatut(StatutEquipement statut) { this.statut = statut; }
 }
