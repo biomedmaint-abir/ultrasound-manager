@@ -35,6 +35,8 @@ public class Contrat {
     @Enumerated(EnumType.STRING)
     private StatutContrat statut;
 
+    private String parc;
+
     @JsonIgnore
     @OneToMany(mappedBy = "contrat")
     private List<Equipement> equipements;
@@ -55,4 +57,6 @@ public class Contrat {
     public void setType(TypeContrat type) { this.type = type; }
     public StatutContrat getStatut() { return statut; }
     public void setStatut(StatutContrat statut) { this.statut = statut; }
+    public String getParc() { return parc; }
+    public void setParc(String parc) { this.parc = parc; }
 }

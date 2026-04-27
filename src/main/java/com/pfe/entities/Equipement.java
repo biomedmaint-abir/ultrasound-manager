@@ -1,5 +1,4 @@
 package com.pfe.entities;
-
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pfe.enums.StatutEquipement;
@@ -18,6 +17,7 @@ public class Equipement {
     private String numeroSerie;
 
     private String nom;
+    private String numInventaire;
 
     @ManyToOne
     @JoinColumn(name = "modele_id")
@@ -48,6 +48,8 @@ public class Equipement {
     public void setNumeroSerie(String numeroSerie) { this.numeroSerie = numeroSerie; }
     public String getNom() { return nom; }
     public void setNom(String nom) { this.nom = nom; }
+    public String getNumInventaire() { return numInventaire; }
+    public void setNumInventaire(String numInventaire) { this.numInventaire = numInventaire; }
     public Modele getModele() { return modele; }
     public void setModele(Modele modele) { this.modele = modele; }
     public Fournisseur getFournisseur() { return fournisseur; }
