@@ -24,15 +24,29 @@ public class InterventionPieceController {
     }
 
     @PostMapping
-    public InterventionPiece create(@RequestBody InterventionPiece interventionPiece) { return interventionPieceService.save(interventionPiece); }
+    public InterventionPiece create(@RequestBody InterventionPiece interventionPiece) {
+        return interventionPieceService.save(interventionPiece);
+    }
+
+    @PostMapping("/bulk")
+    public ResponseEntity<List<InterventionPiece>> createBulk(@RequestBody List<InterventionPiece> pieces) {
+        List<InterventionPiece> saved = pieces.stream()
+            .map(interventionPieceService::save)
+            .toList();
+        return ResponseEntity.ok(saved);
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<InterventionPiece> update(@PathVariable Long id, @RequestBody InterventionPiece interventionPiece) {
-        return interventionPieceService.findById(id).map(i -> { interventionPiece.setId(id); return ResponseEntity.ok(interventionPieceService.save(interventionPiece)); }).orElse(ResponseEntity.notFound().build());
+        return interventionPieceService.findById(id).map(i -> {
+            interventionPiece.setId(id);
+            return ResponseEntity.ok(interventionPieceService.save(interventionPiece));
+        }).orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        interventionPieceService.deleteById(id); return ResponseEntity.noContent().build();
+        interventionPieceService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
