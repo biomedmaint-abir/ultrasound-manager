@@ -28,6 +28,8 @@ public class PieceRechange {
     @Column(precision = 10, scale = 2)
     private BigDecimal prixUnitaire;
 
+    private String client;
+
     @JsonIgnore
     @OneToMany(mappedBy = "piece")
     private List<InterventionPiece> interventions;
@@ -48,4 +50,6 @@ public class PieceRechange {
     public void setQuantiteStock(Integer quantiteStock) { this.quantiteStock = quantiteStock; }
     public BigDecimal getPrixUnitaire() { return prixUnitaire; }
     public void setPrixUnitaire(BigDecimal prixUnitaire) { this.prixUnitaire = prixUnitaire; }
+    public String getClient() { return client; }
+    public void setClient(String client) { this.client = client; }
 }
