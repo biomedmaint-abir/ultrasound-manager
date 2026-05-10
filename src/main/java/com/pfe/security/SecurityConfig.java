@@ -48,6 +48,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/utilisateurs/**").permitAll()
                 .requestMatchers("/api/statistiques/**").permitAll()  // ✅ AJOUTÉ
+                .requestMatchers("/api/assistant/**").permitAll()
                 .anyRequest().authenticated())
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

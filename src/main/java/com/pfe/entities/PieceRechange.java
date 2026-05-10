@@ -3,6 +3,7 @@ package com.pfe.entities;
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -30,6 +31,25 @@ public class PieceRechange {
 
     private String client;
 
+    // ── Nouveaux champs suivi défectueuses ──────────────────────────────
+    @Column(name = "statut")
+    private String statut = "EN_STOCK";
+
+    @Column(name = "client_echange")
+    private String clientEchange;
+
+    @Column(name = "date_echange")
+    private LocalDate dateEchange;
+
+    @Column(name = "retour_fournisseur")
+    private Boolean retourFournisseur = false;
+
+    @Column(name = "date_retour_prevu")
+    private LocalDate dateRetourPrevu;
+
+    @Column(name = "notes_suivi", columnDefinition = "TEXT")
+    private String notesSuivi;
+
     @JsonIgnore
     @OneToMany(mappedBy = "piece")
     private List<InterventionPiece> interventions;
@@ -52,4 +72,16 @@ public class PieceRechange {
     public void setPrixUnitaire(BigDecimal prixUnitaire) { this.prixUnitaire = prixUnitaire; }
     public String getClient() { return client; }
     public void setClient(String client) { this.client = client; }
+    public String getStatut() { return statut; }
+    public void setStatut(String statut) { this.statut = statut; }
+    public String getClientEchange() { return clientEchange; }
+    public void setClientEchange(String clientEchange) { this.clientEchange = clientEchange; }
+    public LocalDate getDateEchange() { return dateEchange; }
+    public void setDateEchange(LocalDate dateEchange) { this.dateEchange = dateEchange; }
+    public Boolean getRetourFournisseur() { return retourFournisseur; }
+    public void setRetourFournisseur(Boolean retourFournisseur) { this.retourFournisseur = retourFournisseur; }
+    public LocalDate getDateRetourPrevu() { return dateRetourPrevu; }
+    public void setDateRetourPrevu(LocalDate dateRetourPrevu) { this.dateRetourPrevu = dateRetourPrevu; }
+    public String getNotesSuivi() { return notesSuivi; }
+    public void setNotesSuivi(String notesSuivi) { this.notesSuivi = notesSuivi; }
 }
