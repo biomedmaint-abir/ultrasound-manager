@@ -41,4 +41,9 @@ public class CodeErreurController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         codeErreurService.deleteById(id); return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/all")
+    public ResponseEntity<Void> deleteAll() {
+        codeErreurService.deleteAll(); return ResponseEntity.noContent().build();
+    }
 }

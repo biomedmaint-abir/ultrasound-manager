@@ -19,4 +19,5 @@ public class CodeErreurService {
     public List<CodeErreur> rechercherParCode(String code) { return codeErreurRepository.findByCodeContaining(code); }
     public CodeErreur save(CodeErreur codeErreur) { return codeErreurRepository.save(codeErreur); }
     public void deleteById(Long id) { codeErreurRepository.deleteById(id); }
+    public void deleteAll() { codeErreurRepository.deleteAll(); }
 }
