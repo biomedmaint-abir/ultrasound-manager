@@ -20,4 +20,5 @@ public class CodeErreurService {
     public CodeErreur save(CodeErreur codeErreur) { return codeErreurRepository.save(codeErreur); }
     public void deleteById(Long id) { codeErreurRepository.deleteById(id); }
     public void deleteAll() { codeErreurRepository.deleteAll(); }
+    public void deleteAll() { codeErreurRepository.deleteAll(); }
 }
