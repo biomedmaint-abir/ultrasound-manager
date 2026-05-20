@@ -10,7 +10,7 @@ import java.util.Date;
 public class JwtUtil {
 
     private static final String SECRET = "pfe_ultrasound_secret_key_2024_very_long_key";
-    private static final long EXPIRATION = 900000;
+    private static final long EXPIRATION = 604800000;
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
