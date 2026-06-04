@@ -50,6 +50,9 @@ public class AuthController {
             response.put("token", token);
             response.put("email", email);
             response.put("role", role);
+            Utilisateur u = utilisateurRepository.findByEmail(email).orElse(null);
+            response.put("nom", u != null && u.getNom() != null ? u.getNom() : "");
+            response.put("prenom", u != null && u.getPrenom() != null ? u.getPrenom() : "");
             response.put("message", "Connexion reussie");
             return ResponseEntity.ok(response);
         } catch (AuthenticationException e) {
