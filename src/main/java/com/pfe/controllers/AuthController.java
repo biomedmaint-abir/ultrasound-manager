@@ -53,6 +53,7 @@ public class AuthController {
             Utilisateur u = utilisateurRepository.findByEmail(email).orElse(null);
             response.put("nom", u != null && u.getNom() != null ? u.getNom() : "");
             response.put("prenom", u != null && u.getPrenom() != null ? u.getPrenom() : "");
+            response.put("id", u != null ? String.valueOf(u.getId()) : "");
             response.put("message", "Connexion reussie");
             return ResponseEntity.ok(response);
         } catch (AuthenticationException e) {
