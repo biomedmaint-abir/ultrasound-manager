@@ -42,6 +42,8 @@ public class Intervention {
 
     private Float dureeHeures;
     private String nomFse;
+    private String commentaireRejet;
+    private String dateValidation;
 
     @Column(precision = 10, scale = 2)
     private BigDecimal coutTotal;
@@ -71,6 +73,10 @@ public class Intervention {
     public void setActionsEffectuees(String actionsEffectuees) { this.actionsEffectuees = actionsEffectuees; }
     public Float getDureeHeures() { return dureeHeures; }
     public void setDureeHeures(Float dureeHeures) { this.dureeHeures = dureeHeures; }
+    public String getCommentaireRejet() { return commentaireRejet; }
+    public void setCommentaireRejet(String c) { this.commentaireRejet = c; }
+    public String getDateValidation() { return dateValidation; }
+    public void setDateValidation(String d) { this.dateValidation = d; }
     public String getNomFse() { return nomFse; }
     public void setNomFse(String nomFse) { this.nomFse = nomFse; }
     public BigDecimal getCoutTotal() { return coutTotal; }
