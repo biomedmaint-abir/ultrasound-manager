@@ -45,19 +45,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/utilisateurs/**").permitAll()
-                .requestMatchers("/api/statistiques/**").permitAll()
-                .requestMatchers("/api/assistant/**").permitAll()
-                .requestMatchers("/api/interventions/**").permitAll()
-                .requestMatchers("/api/equipements/**").permitAll()
-                .requestMatchers("/api/pieces/**").permitAll()
-                .requestMatchers("/api/contrats/**").permitAll()
-                .requestMatchers("/api/plannings/**").permitAll()
-                .requestMatchers("/api/rapports/**").permitAll()
-                .requestMatchers("/api/historique/**").permitAll()
-                .requestMatchers("/api/intervention-pieces/**").permitAll()
-                .anyRequest().authenticated())
+                .anyRequest().permitAll())
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
