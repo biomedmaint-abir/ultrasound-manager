@@ -21,7 +21,11 @@ public class UtilisateurService {
     public Optional<Utilisateur> findById(Long id) { return utilisateurRepository.findById(id); }
     public Optional<Utilisateur> findByEmail(String email) { return utilisateurRepository.findByEmail(email); }
     public Utilisateur save(Utilisateur utilisateur) {
-        utilisateur.setMotDePasse(passwordEncoder.encode(utilisateur.getMotDePasse()));
+        if (utilisateur.getMotDePasse() != null && !utilisateur.getMotDePasse().isEmpty() && !utilisateur.getMotDePasse().startsWith("$2a$")) {
+            utilisateur.setMotDePasse(passwordEncoder.encode(utilisateur.getMotDePasse()));
+        } else if (utilisateur.getMotDePasse() == null && utilisateur.getId() != null) {
+            utilisateurRepository.findById(utilisateur.getId()).ifPresent(existing -> utilisateur.setMotDePasse(existing.getMotDePasse()));
+        }
         return utilisateurRepository.save(utilisateur);
     }
     public void deleteById(Long id) { utilisateurRepository.deleteById(id); }
