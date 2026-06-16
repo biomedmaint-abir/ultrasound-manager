@@ -1,14 +1,18 @@
 package com.pfe.controllers;
 
 import com.pfe.entities.Intervention;
+import com.pfe.entities.Equipement;
+import com.pfe.entities.Utilisateur;
 import com.pfe.enums.StatutIntervention;
 import com.pfe.services.InterventionService;
+import com.pfe.repositories.EquipementRepository;
+import com.pfe.repositories.UtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/interventions")
@@ -17,6 +21,12 @@ public class InterventionController {
 
     @Autowired
     private InterventionService interventionService;
+
+    @Autowired
+    private EquipementRepository equipementRepository;
+
+    @Autowired
+    private UtilisateurRepository utilisateurRepository;
 
     @GetMapping
     public List<Intervention> getAll() { return interventionService.findAll(); }
@@ -36,18 +46,27 @@ public class InterventionController {
         return interventionService.findByTechnicienId(technicienId);
     }
 
-    @GetMapping("/en-attente-validation")
-    public List<Intervention> getEnAttenteValidation() {
+    @GetMapping("/non-assignees")
+    public List<Intervention> getNonAssignees() {
         return interventionService.findAll().stream()
-            .filter(i -> i.getStatut() == StatutIntervention.EN_ATTENTE_VALIDATION)
-            .toList();
+            .filter(i -> i.getTechnicien() == null && i.getNomFse() == null)
+            .collect(Collectors.toList());
     }
 
     @GetMapping("/mttr")
     public ResponseEntity<Double> getMTTR() { return ResponseEntity.ok(interventionService.calculerMTTR()); }
 
     @PostMapping
-    public Intervention create(@RequestBody Intervention intervention) { return interventionService.save(intervention); }
+    public Intervention create(@RequestBody Intervention intervention) {
+        Intervention saved = interventionService.save(intervention);
+        if (intervention.getEquipement() != null && intervention.getEquipement().getId() != null) {
+            equipementRepository.findById(intervention.getEquipement().getId()).ifPresent(e -> {
+                e.setStatut(com.pfe.enums.StatutEquipement.EN_MAINTENANCE);
+                equipementRepository.save(e);
+            });
+        }
+        return saved;
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<Intervention> update(@PathVariable Long id, @RequestBody Intervention intervention) {
@@ -57,24 +76,25 @@ public class InterventionController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}/valider")
-    public ResponseEntity<Intervention> valider(@PathVariable Long id) {
+    @PutMapping("/{id}/assigner-fse")
+    public ResponseEntity<Intervention> assignerFse(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         return interventionService.findById(id).map(i -> {
-            i.setStatut(StatutIntervention.TERMINEE);
-            i.setDateValidation(LocalDateTime.now().toString());
-            i.setCommentaireRejet(null);
+            Long fseId = Long.valueOf(body.get("fseId").toString());
+            String nomFse = body.get("nomFse") != null ? body.get("nomFse").toString() : "";
+            utilisateurRepository.findById(fseId).ifPresent(fse -> {
+                i.setTechnicien(fse);
+                i.setNomFse(nomFse);
+                i.setStatut(StatutIntervention.EN_COURS);
+            });
             return ResponseEntity.ok(interventionService.save(i));
         }).orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}/rejeter")
-    public ResponseEntity<Intervention> rejeter(@PathVariable Long id, @RequestBody Map<String, String> body) {
-        return interventionService.findById(id).map(i -> {
-            i.setStatut(StatutIntervention.EN_COURS);
-            i.setCommentaireRejet(body.get("commentaire"));
-            i.setDateValidation(null);
-            return ResponseEntity.ok(interventionService.save(i));
-        }).orElse(ResponseEntity.notFound().build());
+    @GetMapping("/en-attente-validation")
+    public List<Intervention> getEnAttenteValidation() {
+        return interventionService.findAll().stream()
+            .filter(i -> i.getStatut() == StatutIntervention.EN_ATTENTE_VALIDATION)
+            .collect(Collectors.toList());
     }
 
     @DeleteMapping("/{id}")
@@ -83,4 +103,3 @@ public class InterventionController {
         return ResponseEntity.noContent().build();
     }
 }
-// force redeploy Sat Jun 13 01:23:08 +01 2026

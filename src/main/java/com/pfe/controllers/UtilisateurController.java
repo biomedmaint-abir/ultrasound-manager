@@ -36,6 +36,13 @@ public class UtilisateurController {
         return utilisateurService.findById(id).map(u -> { utilisateur.setId(id); return ResponseEntity.ok(utilisateurService.save(utilisateur)); }).orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/fse-disponibles")
+    public List<Utilisateur> getFseDisponibles() {
+        return utilisateurService.findAll().stream()
+            .filter(u -> u.getRole() != null && u.getRole().getNom().equals("FSE"))
+            .collect(java.util.stream.Collectors.toList());
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         utilisateurService.deleteById(id); return ResponseEntity.noContent().build();
