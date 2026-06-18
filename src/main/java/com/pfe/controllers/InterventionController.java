@@ -103,26 +103,23 @@ public class InterventionController {
             int annee = Integer.parseInt(body.get("annee").toString());
             List<Map<String, Object>> equipements = (List<Map<String, Object>>) body.get("equipements");
 
-            String[] dates = {
-                annee + "-03-15", annee + "-06-15",
-                annee + "-09-15", annee + "-12-15"
-            };
-            String[] descriptions = {
-                "Maintenance préventive — 1ère visite " + annee,
-                "Maintenance préventive — 2ème visite " + annee,
-                "Maintenance préventive — 3ème visite " + annee,
-                "Maintenance préventive — 4ème visite " + annee
-            };
+            List<String> visitesDates = body.containsKey("visitesDates") ?
+                (List<String>) body.get("visitesDates") :
+                java.util.Arrays.asList(annee + "-03-15", annee + "-06-15", annee + "-09-15", annee + "-12-15");
+
+            String[] descLabels = {"1ère visite", "2ème visite", "3ème visite", "4ème visite"};
 
             int count = 0;
             for (Map<String, Object> eq : equipements) {
                 Long equipementId = Long.valueOf(eq.get("id").toString());
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < visitesDates.size(); i++) {
+                    final String dateStr = visitesDates.get(i);
+                    final String desc = "Maintenance préventive — " + (i < descLabels.length ? descLabels[i] : (i+1) + "ème visite") + " " + annee;
                     Intervention inv = new Intervention();
                     inv.setType(com.pfe.enums.TypeIntervention.PREVENTIF);
                     inv.setStatut(StatutIntervention.EN_ATTENTE);
-                    inv.setDateIntervention(java.time.LocalDate.parse(dates[i]));
-                    inv.setDescriptionPanne(descriptions[i]);
+                    inv.setDateIntervention(java.time.LocalDate.parse(dateStr));
+                    inv.setDescriptionPanne(desc);
                     equipementRepository.findById(equipementId).ifPresent(e -> {
                         inv.setEquipement(e);
                         e.setStatut(com.pfe.enums.StatutEquipement.EN_MAINTENANCE);
