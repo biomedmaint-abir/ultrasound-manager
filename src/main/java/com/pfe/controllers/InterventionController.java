@@ -97,6 +97,51 @@ public class InterventionController {
             .collect(Collectors.toList());
     }
 
+    @PostMapping("/generer-planning")
+    public ResponseEntity<Map<String, Object>> genererPlanning(@RequestBody Map<String, Object> body) {
+        try {
+            int annee = Integer.parseInt(body.get("annee").toString());
+            List<Map<String, Object>> equipements = (List<Map<String, Object>>) body.get("equipements");
+
+            String[] dates = {
+                annee + "-03-15", annee + "-06-15",
+                annee + "-09-15", annee + "-12-15"
+            };
+            String[] descriptions = {
+                "Maintenance préventive — 1ère visite " + annee,
+                "Maintenance préventive — 2ème visite " + annee,
+                "Maintenance préventive — 3ème visite " + annee,
+                "Maintenance préventive — 4ème visite " + annee
+            };
+
+            int count = 0;
+            for (Map<String, Object> eq : equipements) {
+                Long equipementId = Long.valueOf(eq.get("id").toString());
+                for (int i = 0; i < 4; i++) {
+                    Intervention inv = new Intervention();
+                    inv.setType(com.pfe.enums.TypeIntervention.PREVENTIF);
+                    inv.setStatut(StatutIntervention.EN_ATTENTE);
+                    inv.setDateIntervention(java.time.LocalDate.parse(dates[i]));
+                    inv.setDescriptionPanne(descriptions[i]);
+                    equipementRepository.findById(equipementId).ifPresent(e -> {
+                        inv.setEquipement(e);
+                        e.setStatut(com.pfe.enums.StatutEquipement.EN_MAINTENANCE);
+                        equipementRepository.save(e);
+                    });
+                    interventionService.save(inv);
+                    count++;
+                }
+            }
+
+            Map<String, Object> result = new java.util.HashMap<>();
+            result.put("interventionsCreees", count);
+            result.put("message", "Planning généré — " + count + " interventions créées");
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(java.util.Map.of("error", e.getMessage()));
+        }
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         interventionService.deleteById(id);
