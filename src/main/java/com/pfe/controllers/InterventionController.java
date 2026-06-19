@@ -85,6 +85,7 @@ public class InterventionController {
                 i.setTechnicien(fse);
                 i.setNomFse(nomFse);
                 i.setStatut(StatutIntervention.EN_COURS);
+                i.setCommentaireRejet(null);
             });
             return ResponseEntity.ok(interventionService.save(i));
         }).orElse(ResponseEntity.notFound().build());
