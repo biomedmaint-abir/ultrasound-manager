@@ -72,7 +72,15 @@ public class InterventionController {
     public ResponseEntity<Intervention> update(@PathVariable Long id, @RequestBody Intervention intervention) {
         return interventionService.findById(id).map(i -> {
             intervention.setId(id);
-            return ResponseEntity.ok(interventionService.save(intervention));
+            Intervention saved = interventionService.save(intervention);
+            // Si intervention TERMINEE → remettre équipement EN_SERVICE
+            if (intervention.getStatut() == StatutIntervention.TERMINEE && intervention.getEquipement() != null) {
+                equipementRepository.findById(intervention.getEquipement().getId()).ifPresent(e -> {
+                    e.setStatut(com.pfe.enums.StatutEquipement.EN_SERVICE);
+                    equipementRepository.save(e);
+                });
+            }
+            return ResponseEntity.ok(saved);
         }).orElse(ResponseEntity.notFound().build());
     }
 
