@@ -26,6 +26,12 @@ public class InterventionController {
     private EquipementRepository equipementRepository;
 
     @Autowired
+    private com.pfe.repositories.InterventionPieceRepository interventionPieceRepo;
+
+    @Autowired
+    private com.pfe.repositories.ChecklistMaintenanceRepository checklistRepo;
+
+    @Autowired
     private UtilisateurRepository utilisateurRepository;
 
     @GetMapping
@@ -150,6 +156,17 @@ public class InterventionController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
+        try {
+            com.pfe.repositories.InterventionPieceRepository ipRepo = null;
+            com.pfe.repositories.ChecklistMaintenanceRepository clRepo = null;
+            for (java.lang.reflect.Field f : this.getClass().getDeclaredFields()) {
+                f.setAccessible(true);
+                if (f.getType().equals(com.pfe.repositories.InterventionPieceRepository.class)) ipRepo = (com.pfe.repositories.InterventionPieceRepository) f.get(this);
+                if (f.getType().equals(com.pfe.repositories.ChecklistMaintenanceRepository.class)) clRepo = (com.pfe.repositories.ChecklistMaintenanceRepository) f.get(this);
+            }
+            if (ipRepo != null) ipRepo.deleteByInterventionId(id);
+            if (clRepo != null) clRepo.deleteByInterventionId(id);
+        } catch (Exception e) {}
         interventionService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
