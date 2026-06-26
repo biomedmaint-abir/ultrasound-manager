@@ -19,18 +19,16 @@ public class AnalysePredictiveController {
     @Autowired private ContratRepository contratRepository;
 
     private Map<String, Object> calculerScore(com.pfe.entities.Equipement eq) {
-        LocalDate il12mois = LocalDate.now().minusMonths(12);
-        LocalDate il6mois = LocalDate.now().minusMonths(6);
         List<com.pfe.entities.Intervention> interventions = interventionRepository.findByEquipementId(eq.getId());
 
         long pannes12 = interventions.stream()
             .filter(i -> i.getType() == com.pfe.enums.TypeIntervention.CORRECTIF
-                && i.getDateIntervention() != null && i.getDateIntervention().isAfter(il12mois))
+                && i.getDateIntervention() != null && i.getDateIntervention().isAfter(depuis))
             .count();
 
         long pannes6 = interventions.stream()
             .filter(i -> i.getType() == com.pfe.enums.TypeIntervention.CORRECTIF
-                && i.getDateIntervention() != null && i.getDateIntervention().isAfter(il6mois))
+                && i.getDateIntervention() != null && i.getDateIntervention().isAfter(depuis))
             .count();
 
         double mttr = interventions.stream()
@@ -90,18 +88,16 @@ public class AnalysePredictiveController {
     }
 
     private Map<String, Object> calculerScorePeriode(com.pfe.entities.Equipement eq, LocalDate depuis) {
-        LocalDate il12mois = LocalDate.now().minusMonths(12);
-        LocalDate il6mois = LocalDate.now().minusMonths(6);
         List<com.pfe.entities.Intervention> interventions = interventionRepository.findByEquipementId(eq.getId());
 
         long pannes12 = interventions.stream()
             .filter(i -> i.getType() == com.pfe.enums.TypeIntervention.CORRECTIF
-                && i.getDateIntervention() != null && i.getDateIntervention().isAfter(il12mois))
+                && i.getDateIntervention() != null && i.getDateIntervention().isAfter(depuis))
             .count();
 
         long pannes6 = interventions.stream()
             .filter(i -> i.getType() == com.pfe.enums.TypeIntervention.CORRECTIF
-                && i.getDateIntervention() != null && i.getDateIntervention().isAfter(il6mois))
+                && i.getDateIntervention() != null && i.getDateIntervention().isAfter(depuis))
             .count();
 
         // Pannes par mois pour sparkline
