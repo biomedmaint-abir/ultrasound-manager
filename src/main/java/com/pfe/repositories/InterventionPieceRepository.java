@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface InterventionPieceRepository extends JpaRepository<InterventionPiece, Long> {
+    void deleteByInterventionId(Long interventionId);
 }
